@@ -55,5 +55,39 @@ namespace Blog.Controllers
                 return StatusCode(201,blogger);
             }
         }
+
+        [HttpPut]
+        public ActionResult<Blogger> Put(Guid id, updateBloggerDto updateBloggerDto)
+        {
+            using (var context = new BlogDbContext())
+            {
+                var existingBlogger = context.Bloggers.FirstOrDefault(x => x.Id == id);
+                if (existingBlogger != null)
+                {
+                    existingBlogger.Name = updateBloggerDto.Name;
+                    existingBlogger.Sex = updateBloggerDto.Sex;
+                    context.Bloggers.Update(existingBlogger);
+                    context.SaveChanges();
+                    return StatusCode(200, existingBlogger);
+                }
+                return NotFound();
+            }
+        }
+
+        [HttpDelete]
+        public ActionResult Delete(Guid id)
+        {
+            using (var context = new BlogDbContext())
+            {
+                var delBlogger = context.Bloggers.FirstOrDefault(y => y.Id == id);
+                if (delBlogger != null)
+                {
+                    context.Bloggers.Remove(delBlogger);
+                    context.SaveChanges();
+                    return StatusCode(200, delBlogger);
+                }
+                return NotFound();
+            }
+        }
     }
 }
