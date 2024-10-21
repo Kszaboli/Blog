@@ -18,6 +18,21 @@ namespace Blog.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public ActionResult<Blogger> GetBId(Guid id)
+        {
+            using (var context = new BlogDbContext())
+            {
+                var blogger = context.Bloggers.FirstOrDefault(x => x.Id == id);
+
+                if (blogger != null)
+                {
+                    return StatusCode(200, blogger);
+                }
+                return NotFound();
+            }
+        }
+
         [HttpPost]
         public ActionResult<Blogger> Post(CreateBloggerDto createBloggerDto)
         {
@@ -39,7 +54,6 @@ namespace Blog.Controllers
                 }
                 return StatusCode(201,blogger);
             }
-            return Ok();
         }
     }
 }
